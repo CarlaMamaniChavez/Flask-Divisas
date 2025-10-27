@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divisas</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <input type="number" id="amount" value="1.00">
+            <select id="from">
+                <option value="USD"> USD - Dolar </option>
+                <option value="EUR"> EUR - Euro </option>
+                <option value="BOB"> BOB - Boliviano </option>
+            </select>
+            <span> -> </span>
+            <select id="to">
+                <option value="EUR"> EUR - Euro </option>
+                <option value="USD"> USD - Dolar </option>
+                <option value="BOB"> BOB - Boliviano </option>
+            </select>
+            <button onclick="convertir()">Convertir</button>
+            <p id="resultado"></p>
+        </div>
+    </div>
+    <script>
+        async function convertir() {
+            const amount = document.getElementById("amount").value;
+            const from = document.getElementById("from").value;
+            const to = document.getElementById("to").value;
+            const response = await fetch("/convert", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({amount, from, to})           
+            });
+            const data = await response.json();
+            if(data.converted !== undefined){
+                document.getElementById("resultado").innerText = `Resultado: ${data.converted} ${to}`;        
+            }
+            else {
+                document.getElementById("resultado").innerText = `Error al convertir`
+            }
+            
+        }
+    </script>
+
+</body>
+</html>
